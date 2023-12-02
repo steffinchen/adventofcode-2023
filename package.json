@@ -1,0 +1,21 @@
+{
+  "name": "aoc-2023",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Advent of Code 2023",
+  "author": "steffinchen",
+  "license": "ISC",
+  "scripts": {
+    "start": "ts-node --esm src/index.ts",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "ts-node": "^10.9.1",
+    "tsc": "^2.0.4",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
