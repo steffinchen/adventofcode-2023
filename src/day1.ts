@@ -1,52 +1,39 @@
 import { Day } from './day.type';
+import { expectEquals } from './helper.js';
 
 export class Day1 implements Day {
-  input: string[] = [];
-
-  testInput = ['1abc2', 'pqr3stu8vwx', 'a1b2c3d4e5f', 'treb7uchet'];
-
-  regex = /\d/g;
-
-  constructor(input: string[]) {
-    this.input = input;
-  }
-
-  part1 = () => {
-    this.test();
-    const sampleResult = this.testInput
-      .map((line) => this.getNumber(line))
-      .reduce((a, b) => a + b);
-    if (sampleResult !== 142)
-      throw new Error(`Test result is not as expected: ${sampleResult}`);
-
-    return this.input
-      .map((line) => this.getNumber(line))
+  part1 = (input: string[]) => {
+    return input
+      .map((line) => this.getNumber(line, /\d/g))
       .reduce((a, b) => a + b);
   };
 
-  part2 = () => {
+  part2 = (input: string[]) => {
     return 0;
   };
 
-  test = () => {
-    this.expectEquals(77, this.getNumber('treb7uchet'));
-    this.expectEquals(22, this.getNumber('2asdf'));
-    this.expectEquals(22, this.getNumber('asdf2'));
-    this.expectEquals(23, this.getNumber('asdf23'));
-    this.expectEquals(23, this.getNumber('23asdf'));
-    this.expectEquals(22, this.getNumber('2asdf'));
-    this.expectEquals(22, this.getNumber('22'));
-    this.expectEquals(22, this.getNumber('2'));
-    this.expectEquals(36, this.getNumber('asd3skdk5skdk6asfd'));
+  testPart1 = () => {
+    const example = ['1abc2', 'pqr3stu8vwx', 'a1b2c3d4e5f', 'treb7uchet'];
+    const sampleResult = this.part1(example);
+    if (sampleResult !== 142)
+      throw new Error(`Test result is not as expected: ${sampleResult}`);
+
+    const regex = /\d/g;
+    expectEquals(77, this.getNumber('treb7uchet', regex));
+    expectEquals(22, this.getNumber('2asdf', regex));
+    expectEquals(22, this.getNumber('asdf2', regex));
+    expectEquals(23, this.getNumber('asdf23', regex));
+    expectEquals(23, this.getNumber('23asdf', regex));
+    expectEquals(22, this.getNumber('2asdf', regex));
+    expectEquals(22, this.getNumber('22', regex));
+    expectEquals(22, this.getNumber('2', regex));
+    expectEquals(36, this.getNumber('asd3skdk5skdk6asfd', regex));
   };
 
-  expectEquals(expected: number, actual: number) {
-    if (expected !== actual)
-      throw new Error(`Expected ${expected} but got ${actual}`);
-  }
+  testPart2 = () => {};
 
-  getNumber = (line: string) => {
-    const matches = Array.from(line.matchAll(this.regex), (m) => m[0]);
+  getNumber = (line: string, regex: RegExp) => {
+    const matches = Array.from(line.matchAll(regex), (m) => m[0]);
     let firstDigit = matches[0];
     let secondDigit = matches[matches.length - 1];
 

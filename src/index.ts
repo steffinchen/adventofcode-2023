@@ -16,11 +16,13 @@ console.log(`Day ${day}, Part ${part.toUpperCase()}: `, result);
 function getResult(dayS: string, part: string, input: string[]) {
   switch (dayS) {
     case '1':
-      const day = new Day1(input);
+      const day = new Day1();
       if (part === 'a') {
-        return day.part1();
+        day.testPart1();
+        return day.part1(input);
       } else {
-        return day.part2();
+        day.testPart2();
+        return day.part2(input);
       }
     default:
       throw new Error(`Day ${dayS} not implemented`);

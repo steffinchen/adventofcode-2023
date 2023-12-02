@@ -1,4 +1,6 @@
 export interface Day {
-  part1: () => number;
-  part2: () => number;
+  part1: (input: string[]) => number;
+  part2: (input: string[]) => number;
+  testPart1: () => void;
+  testPart2: () => void;
 }
