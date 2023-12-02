@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { Day1 } from './day1.js';
+import { Day2 } from './day2.js';
 
 const day = process.argv[2];
 const part = process.argv[3] ?? 'a';
@@ -23,6 +24,15 @@ function getResult(dayS: string, part: string, input: string[]) {
       } else {
         day.testPart2();
         return day.part2(input);
+      }
+    case '2':
+      const day2 = new Day2();
+      if (part === 'a') {
+        day2.testPart1();
+        return day2.part1(input);
+      } else {
+        day2.testPart2();
+        return day2.part2(input);
       }
     default:
       throw new Error(`Day ${dayS} not implemented`);
