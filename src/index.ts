@@ -4,7 +4,10 @@ import { Day1 } from './day1.js';
 const day = process.argv[2];
 const part = process.argv[3] ?? 'a';
 
-const input = fs.readFileSync(`./data/day_${day}.txt`, 'utf8').split('\n');
+const input = fs
+  .readFileSync(`./data/day_${day}.txt`, 'utf8')
+  .split('\n')
+  .filter((line) => line.length > 0);
 
 const result = getResult(day, part, input);
 
