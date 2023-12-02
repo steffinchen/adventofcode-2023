@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { Day } from './day.type';
 import { expectEquals } from './helper.js';
 
@@ -9,7 +10,10 @@ export class Day1 implements Day {
   };
 
   part2 = (input: string[]) => {
-    return 0;
+    const regex = /(?=(\d|one|two|three|four|five|six|seven|eight|nine))/g;
+    return input
+      .map((line) => this.getNumber(line, regex))
+      .reduce((a, b) => a + b);
   };
 
   testPart1 = () => {
@@ -30,24 +34,59 @@ export class Day1 implements Day {
     expectEquals(36, this.getNumber('asd3skdk5skdk6asfd', regex));
   };
 
-  testPart2 = () => {};
+  testPart2 = () => {
+    const example = [
+      'two1nine',
+      'eightwothree',
+      'abcone2threexyz',
+      'xtwone3four',
+      '4nineeightseven2',
+      'zoneight234',
+      '7pqrstsixteen',
+    ];
+    const sampleResult = this.part2(example);
+    if (sampleResult !== 281)
+      throw new Error(`Test result is not as expected: ${sampleResult}`);
+
+    expectEquals(76, this.part2(['sevenpqrstsixteen']));
+    expectEquals(74, this.part2(['7mhpslddjtwo9sixkzdvqzvggvfoursdvd']));
+    expectEquals(76, this.part2(['7two9six']));
+    expectEquals(18, this.part2(['oneight']));
+    expectEquals(11, this.part2(['one']));
+    expectEquals(11, this.part2(['1one']));
+  };
 
   getNumber = (line: string, regex: RegExp) => {
-    const matches = Array.from(line.matchAll(regex), (m) => m[0]);
+    const r = line.matchAll(regex);
+    const matches = Array.from(r, (m) => m[0] || m[1]);
     let firstDigit = matches[0];
     let secondDigit = matches[matches.length - 1];
 
-    if (firstDigit.length !== 1 || parseInt(firstDigit) > 9) {
-      throw new Error(
-        `First digit is not a single digit: ${firstDigit} (line: ${line})`
-      );
-    }
-    if (secondDigit.length !== 1 || parseInt(secondDigit) > 9) {
-      throw new Error(
-        `Second digit is not a single digit: ${secondDigit} (line: ${line})`
-      );
-    }
+    return Number(`${this.toNumber(firstDigit)}${this.toNumber(secondDigit)}`);
+  };
 
-    return Number(`${firstDigit}${secondDigit}`);
+  toNumber = (s: string) => {
+    switch (s) {
+      case 'one':
+        return 1;
+      case 'two':
+        return 2;
+      case 'three':
+        return 3;
+      case 'four':
+        return 4;
+      case 'five':
+        return 5;
+      case 'six':
+        return 6;
+      case 'seven':
+        return 7;
+      case 'eight':
+        return 8;
+      case 'nine':
+        return 9;
+      default:
+        return Number(s);
+    }
   };
 }
