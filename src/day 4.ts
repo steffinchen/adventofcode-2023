@@ -12,6 +12,7 @@ export class Day4 implements Day {
   };
 
   part2 = (input: string[]) => {
+    const start = Date.now();
     const cards = this.parseInput(input);
 
     const winMap = cards.reduce((acc, card) => {
@@ -20,16 +21,18 @@ export class Day4 implements Day {
       return acc;
     }, {} as Record<number, number[]>);
 
-    const cardsToCheck = [...cards].map((c) => c.id);
-    const cardsWon: number[] = [];
-    while (cardsToCheck.length > 0) {
-      const card = cardsToCheck.pop()!;
-      const winningCards = winMap[card];
-      cardsWon.push(card);
-      cardsToCheck.push(...winningCards);
+    const cardsCount = cards.reduce((acc, card) => {
+      acc[card.id] = 1;
+      return acc;
+    }, {} as Record<number, number>);
+
+    for (let card of cards) {
+      winMap[card.id].forEach((c) => (cardsCount[c] += cardsCount[card.id]));
     }
 
-    return cardsWon.length;
+    const end = Date.now();
+    console.log(`Time: ${end - start}ms`);
+    return Object.values(cardsCount).reduce((a, b) => a + b);
   };
 
   getWinningCardCopies(card: Card, cards: Card[]) {
