@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Day } from './day.type.js';
 import { expectEquals } from './helper.js';
 
@@ -11,13 +12,44 @@ export class Day4 implements Day {
   };
 
   part2 = (input: string[]) => {
-    return 0;
+    const cards = this.parseInput(input);
+
+    const winMap = cards.reduce((acc, card) => {
+      const copies = this.getWinningCardCopies(card, cards);
+      acc[card.id] = copies.map((c) => c.id);
+      return acc;
+    }, {} as Record<number, number[]>);
+
+    const cardsToCheck = [...cards].map((c) => c.id);
+    const cardsWon: number[] = [];
+    while (cardsToCheck.length > 0) {
+      const card = cardsToCheck.pop()!;
+      const winningCards = winMap[card];
+      cardsWon.push(card);
+      cardsToCheck.push(...winningCards);
+    }
+
+    return cardsWon.length;
   };
 
+  getWinningCardCopies(card: Card, cards: Card[]) {
+    const noOfWinningNumbers = this.getWinningNumbers(card).length;
+    if (noOfWinningNumbers === 0) return [];
+    else {
+      const start = card.id;
+      const end = Math.min(start + noOfWinningNumbers, cards.length);
+      return cards.slice(start, end);
+    }
+  }
+
   getPoints = (card: Card) => {
-    const n = card.numbers.filter((n) => card.winning.has(n)).length;
+    const n = this.getWinningNumbers(card).length;
     if (n <= 0) return 0;
     else return Math.pow(2, n - 1);
+  };
+
+  getWinningNumbers = (card: Card) => {
+    return card.numbers.filter((n) => card.winning.has(n));
   };
 
   parseInput(input: string[]): Card[] {
@@ -91,9 +123,16 @@ export class Day4 implements Day {
   };
 
   testPart2 = () => {
-    const example: string[] = [];
-    const sampleResult = this.part1(example);
-    if (sampleResult !== 42)
+    const example: string[] = [
+      'Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53',
+      'Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19',
+      'Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1',
+      'Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83',
+      'Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36',
+      'Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11',
+    ];
+    const sampleResult = this.part2(example);
+    if (sampleResult !== 30)
       throw new Error(`Test result is not as expected: ${sampleResult}`);
   };
 }
