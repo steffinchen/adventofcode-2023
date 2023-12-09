@@ -17,6 +17,14 @@ export class Day9 implements Day {
     return lastValue + this.getNextValue(diffs);
   };
 
+  getPreviousValue = (history: number[]): number => {
+    if (history.every((diff) => diff === 0)) return 0;
+
+    const diffs = this.calcDiff(history);
+    const lastValue = _.first(history) ?? 0;
+    return lastValue - this.getPreviousValue(diffs);
+  };
+
   calcDiff = (history: number[]): number[] => {
     return history.reduce((acc, curr, i) => {
       if (i === 0) return acc;
@@ -25,7 +33,10 @@ export class Day9 implements Day {
   };
 
   part2 = (input: string[]) => {
-    return 0;
+    return input
+      .map((line) => line.split(' ').map((n) => Number(n.trim())))
+      .map((history) => this.getPreviousValue(history))
+      .reduce((acc, curr) => acc + curr, 0);
   };
 
   testPart1 = () => {
@@ -41,9 +52,13 @@ export class Day9 implements Day {
   };
 
   testPart2 = () => {
-    const example: string[] = [];
-    const sampleResult = this.part1(example);
-    if (sampleResult !== 42)
+    const example: string[] = [
+      '0 3 6 9 12 15',
+      '1 3 6 10 15 21',
+      '10 13 16 21 30 45',
+    ];
+    const sampleResult = this.part2(example);
+    if (sampleResult !== 2)
       throw new Error(`Test result is not as expected: ${sampleResult}`);
   };
 }
