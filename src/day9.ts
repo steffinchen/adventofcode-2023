@@ -3,27 +3,18 @@ import { Day } from './day.type.js';
 
 export class Day9 implements Day {
   part1 = (input: string[]) => {
-    //2105961943
     return input
       .map((line) => line.split(' ').map((n) => Number(n.trim())))
-      .map((history) => this.extrapolateNextValue(history))
+      .map((history) => this.getNextValue(history))
       .reduce((acc, curr) => acc + curr, 0);
   };
 
-  extrapolateNextValue = (history: number[]): number => {
-    let done = false;
-    const allDiffs: number[][] = [history];
-    let currentDiffs = history;
+  getNextValue = (history: number[]): number => {
+    if (history.every((diff) => diff === 0)) return 0;
 
-    while (!done) {
-      currentDiffs = this.calcDiff(currentDiffs);
-      allDiffs.push(currentDiffs);
-      done = currentDiffs.every((diff) => diff === 0);
-    }
-
-    return allDiffs
-      .map((diffs) => _.last(diffs) ?? 0)
-      .reduce((a, b) => a + b, 0);
+    const diffs = this.calcDiff(history);
+    const lastValue = _.last(history) ?? 0;
+    return lastValue + this.getNextValue(diffs);
   };
 
   calcDiff = (history: number[]): number[] => {
